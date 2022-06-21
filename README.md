@@ -1,7 +1,7 @@
 <h1 id="header" align="center">
     Auto Repo Script
     <div id="badge">
-        <img id="last-commit" src="https://img.shields.io/last-commit/BugReportOnWeb/auto-repo-script" />
+        <img id="last-commit" src="https://img.shields.io/github/last-commit/BugReportOnWeb/auto-repo-script" />
     </div>
 </h1>
 
