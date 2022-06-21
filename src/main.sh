@@ -3,6 +3,19 @@
 # Author: Dev
 # Date: 20/06/2022
 
+# Global Constants
+DIR_NAME="$(basename $(pwd))"
+CMD_NAME="$(basename $0)"
+
+AUTO=false
+PUSH=true
+EXIT=false
+
+RED='\033[0;31m'
+NC='\033[0m'
+BOLD="$(tput bold)"
+NORM="$(tput sgr0)"
+
 ########################################
 # Preview the options from user inputs.
 # Globals:
@@ -13,17 +26,17 @@
 ########################################
 preview() {
 cat <<EOF
-- Repository Name: $REPO_NAME
-- Repository Description: $DESCRIPTION
-- Repository Visibility: $STATUS
-- GitHub URL: https://github.com/$USERNAME
+- Repository Name: ${REPO_NAME}
+- Repository Description: ${DESCRIPTION}
+- Repository Visibility: ${STATUS}
+- GitHub URL: https://github.com/${USERNAME}
 EOF
 
   echo; echo -n 'Is this OK [(Y)es/(n)o]? (yes) '
   read CONFIRM
-  CONFIRM=$(echo $CONFIRM | tr '[:upper:]' '[:lower:]')
+  CONFIRM=$(echo "${CONFIRM}" | tr '[:upper:]' '[:lower:]')
 
-  if [[ $CONFIRM == 'no' || $CONFIRM == 'n' ]]; then
+  if [[ "${CONFIRM}" == 'no' || "${CONFIRM}" == 'n' ]]; then
     user_inputs
   fi
 }
@@ -31,20 +44,20 @@ EOF
 ########################################
 # Takes user inputs for repository details
 # GLOBAL:
-#   DIR_NAME
+#   AUTO, DIR_NAME
 # Returns:
 #   User input values and run preview()
 ########################################
 user_inputs() {
-  if [[ $AUTO == true ]]; then
-    REPO_NAME=$DIR_NAME
+  if [[ "${AUTO}" == true ]]; then
+    REPO_NAME="${DIR_NAME}"
     DESCRIPTION=''
     PRIVATE=false
   else
-    echo -n "Repository Name: ($DIR_NAME) "
+    echo -n "Repository Name: (${DIR_NAME}) "
     read REPO_NAME
-    if [[ -z $REPO_NAME ]]; then
-      REPO_NAME=$DIR_NAME
+    if [[ -z "${REPO_NAME}" ]]; then
+      REPO_NAME="${DIR_NAME}"
     fi
 
     echo -n 'Repository Description: '
@@ -53,8 +66,8 @@ user_inputs() {
     # o == Open/Public && c == Close/Private
     echo -n "Repository Visibility [(O)pen/(c)lose]: (Public) "
     read VISIBILITY
-    VISIBILITY=$(echo $VISIBILITY | tr '[:upper:]' '[:lower:]')
-    if [[ -z $VISIBILITY || $VISIBILITY == 'o' ]]; then
+    VISIBILITY=$(echo "${VISIBILITY}" | tr '[:upper:]' '[:lower:]')
+    if [[ -z "${VISIBILITY}" || "${VISIBILITY}" == 'o' ]]; then
       PRIVATE=false
       STATUS='Open/Public'
     else
@@ -66,13 +79,15 @@ user_inputs() {
   echo -n 'GitHub Username: '
   read USERNAME
 
-  echo -n "Host password for '$USERNAME': "
+  echo -n "Host password for '${USERNAME}': "
   read -s PASSWORD; echo -e '\n'
   preview
 }
 
 ########################################
 # Flags/Options for the main sciprt
+# Globals:
+#   RED, NC, BOLD, NORM, CMD_NAME
 # Arguments:
 #   -h/--help, -y/--yes, --no-push, None
 # Returns:
@@ -81,19 +96,18 @@ user_inputs() {
 #   --no-push to not push files after setup()
 ########################################
 flags() {
-  case $1 in
+  case "$1" in
     -h|--help)
       echo 'Help page' 
       ;;
-    -y|--yes)
-      AUTO=true
-      ;;
-    --no-push)
-      PUSH=false
-      ;;
+    -y|--yes) AUTO=true ;;
+    --no-push) PUSH=false ;;
     *)
-      if [[ -n $1 ]]; then
-        echo "$0: cannot use $1: Invalid option" >&2
+      if [[ -n "$1" ]]; then
+        echo -e "${BOLD}${CMD_NAME}${NORM} \
+${RED}${BOLD}Unrecognized option argument:${NORM}${NC} \
+${BOLD}'$1'${NORM}
+Try '${CMD_NAME} --help' for more information." >&2
         exit 1
       fi
       ;;
@@ -110,13 +124,13 @@ flags() {
 ########################################
 setup() {
   git init
-  echo "# $REPO_NAME" >> README.md
+  echo "# ${REPO_NAME}" >> README.md
   touch .gitignore
   git add .
   git commit -m "Initial commit"
-  git remote add origin https://github.com/$USERNAME/$REPO_NAME.git
+  git remote add origin https://github.com/${USERNAME}/${REPO_NAME}.git
 
-  if [[ $PUSH == true ]]; then
+  if [[ "${PUSH}" == true ]]; then
     git push -u origin master
   fi
 }
@@ -124,29 +138,26 @@ setup() {
 ########################################
 # The main function that goes through
 # flags > user_inputs > cURL > setup
+# Globals:
+#   PASSWORD, REPO_NAME, DESCIPTION, PRIVATE
 # Arguments:
 #   Available flags that goes to flags()
 # Returns:
 #   stderr fro cURL && git initilization
 ########################################
 main() {
-  DIR_NAME=$(basename $(pwd))
-  AUTO=false
-  PUSH=true
-  EXIT=false
-
-  flags $1
+  flags "$1"
   user_inputs; echo
 
   # GitHub API call using cURL
   curl \
     -X POST \
     -H "Accept: application/vnd.github.v3+json" \
-    -H "Authorization: token $PASSWORD" \
+    -H "Authorization: token ${PASSWORD}" \
     -d "{ \
-      \"name\": \"$REPO_NAME\", \
-      \"description\": \"$DESCRIPTION\", \
-      \"private\": $PRIVATE \
+      \"name\": \"${REPO_NAME}\", \
+      \"description\": \"${DESCRIPTION}\", \
+      \"private\": ${PRIVATE} \
     }" \
     https://api.github.com/user/repos >> /dev/null; echo
 
