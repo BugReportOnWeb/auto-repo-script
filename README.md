@@ -45,4 +45,5 @@ Well that goes without saying that this piece of code is not optimised at its be
 - Error handling for none output in Name, Visibility, and GitHub crendentials
 - Excpection for wrong Github credentials (links to first point)
 - Outputing stderr of cURL to `/dev/null`
+- Config files for GitHub credentials for auto fill
 
