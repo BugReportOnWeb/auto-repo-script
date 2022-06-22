@@ -115,6 +115,17 @@ EOL
 #   --no-push to not push files after setup()
 ########################################
 flags() {
+  # In case multiple options has -h/--help in it
+  if [[ "$#" -gt 1 ]]; then
+    for ele in "$@"; do
+      if [[ "${ele}" == '-h' || "${ele}" == '--help' ]]; then
+        help_page
+        exit 0
+      fi
+    done
+  fi
+
+  # Check for other options
   for option in "$@"; do
     case "$option" in
       -h|--help)
@@ -127,7 +138,7 @@ flags() {
         if [[ -n "$option" ]]; then
           echo -e "${BOLD}${CMD_NAME}${NORM} \
 ${RED}${BOLD}Unrecognized option argument:${NORM}${NC} \
-${BOLD}'$1'${NORM}
+${BOLD}'${option}'${NORM}
 Try '${CMD_NAME} --help' for more information." >&2
           exit 1
         fi
