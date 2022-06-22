@@ -84,6 +84,26 @@ user_inputs() {
 }
 
 ########################################
+# Help page for (-h | --help) flag
+# Globals:
+#   CMD_NAME
+# Outputs:
+#   Help message
+########################################
+help_page() {
+cat << EOL
+Info: A shell script to automate GitHub repository process
+Usage: ${CMD_NAME} [OPTIONS...]
+
+OPTIONS:
+  -h, --help        Print this help message
+  -y, --yes         Autofills default values
+  --no-push         Won't push commits after repo setup
+
+EOL
+}
+
+########################################
 # Flags/Options for the main sciprt
 # Globals:
 #   RED, NC, BOLD, NORM, CMD_NAME
@@ -95,22 +115,26 @@ user_inputs() {
 #   --no-push to not push files after setup()
 ########################################
 flags() {
-  case "$1" in
-    -h|--help)
-      echo 'Help page' 
-      ;;
-    -y|--yes) AUTO='true' ;;
-    --no-push) PUSH='false' ;;
-    *)
-      if [[ -n "$1" ]]; then
-        echo -e "${BOLD}${CMD_NAME}${NORM} \
+  for option in "$@"; do
+    case "$option" in
+      -h|--help)
+        help_page
+        exit 0
+        ;;
+      -y|--yes) AUTO='true' ;;
+      --no-push) PUSH='false' ;;
+      *)
+        if [[ -n "$option" ]]; then
+          echo -e "${BOLD}${CMD_NAME}${NORM} \
 ${RED}${BOLD}Unrecognized option argument:${NORM}${NC} \
 ${BOLD}'$1'${NORM}
 Try '${CMD_NAME} --help' for more information." >&2
-        exit 1
-      fi
-      ;;
-  esac
+          exit 1
+        fi
+        ;;
+    esac
+  done
+
 }
 
 ########################################
@@ -145,7 +169,7 @@ setup() {
 #   stderr fro cURL && git initilization
 ########################################
 main() {
-  flags "$1"
+  flags "$@"
   user_inputs; echo
 
   # GitHub API call using cURL
@@ -162,5 +186,5 @@ main() {
 
   setup
 }
-main $1
+main "$@"
 
