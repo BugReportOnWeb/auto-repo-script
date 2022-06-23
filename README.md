@@ -14,9 +14,9 @@ $ git clone https://github.com/BugReportOnWeb/auto-repo-script.git
 $ cd auto-repo-script
 ```
 
-Copy the main script to the `/usr/bin/` directory. Here `<cmd-name>` refers to the name you give to the command. Executing it will run the script.
-```
-# cp src/main.sh <cmd-name>
+Copy the main script to the `/usr/local/bin/` directory. Here `<cmd-name>` refers to the name you give to the command. Executing it will run the script.
+```bash
+$ sudo cp src/main.sh /usr/local/bin/<cmd-name>
 ```
 
 ## Usage
@@ -30,13 +30,18 @@ Run the command in the project directory.
 $ <cmd-name>
 ```
 
+## Uninstallation
+Just remove the script from `/usr/local/bin/` directory
+```bash
+$ sudo rm /usr/local/bin/<cmd-name>
+```
+
 ## Setup options
 After running the script, you will go through a short questionnaire about the information regarding the remote repository. Those questions are as follow:
 * Name of the Repository
 * Descption of the Repository
 * Visibility of the Repository (o = Open/Public OR c = Close/Private)
 * GitHub credentials (Username and Password)
-
 
 ## Find a bug?
 Well that goes without saying that this piece of code is not optimised at its best. Without even looking it up, I can surely say numerous bugs might pop up in certain edge cases. Well if you find one, feel free to open an issue about it. Our team (yeah just me) will try to fix it as soon as possible. You can even open a PR if you already have a solution in your mind. Thank you!

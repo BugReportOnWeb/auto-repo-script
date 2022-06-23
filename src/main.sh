@@ -43,7 +43,7 @@ EOF
   confirm=$(echo "${confirm}" | tr '[:upper:]' '[:lower:]')
 
   if [[ "${confirm}" == 'no' || "${confirm}" == 'n' ]]; then
-    user_inputs
+    echo; user_inputs
   fi
 }
 
@@ -139,7 +139,7 @@ flags() {
       --no-push) PUSH='false' ;;
       *)
         if [[ -n "$option" ]]; then
-          echo -e "${BOLD}${CMD_NAME}${NORM} \
+          echo -e "${BOLD}${CMD_NAME}:${NORM} \
 ${RED}Unrecognized option argument:${NC} \
 ${BOLD}'${option}'${NORM}
 Try '${CMD_NAME} --help' for more information." >&2
