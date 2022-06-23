@@ -14,10 +14,11 @@ AUTO='false'
 EXIT='false'
 PRIVATE='false'
 
-RED='\033[0;31m'
-NC='\033[0m'
 BOLD="$(tput bold)"
 NORM="$(tput sgr0)"
+RED="\033[0;31m${BOLD}"
+GREEN="\033[0;32m${BOLD}"
+NC="${NORM}\033[0m"
 
 ########################################
 # Preview the options from user inputs.
@@ -31,10 +32,10 @@ preview() {
   local confirm
 
 cat <<EOF
-- Repository Name: ${REPO_NAME}
-- Repository Description: ${DESCRIPTION}
-- Repository Visibility: ${STATUS}
-- GitHub URL: https://github.com/${username}
+* Repository Name: ${REPO_NAME}
+* Repository Description: ${DESCRIPTION}
+* Repository Visibility: ${STATUS}
+* GitHub URL: https://github.com/${username}
 EOF
 
   echo; echo -n 'Is this OK [(Y)es/(n)o]? (yes) '
@@ -57,16 +58,17 @@ user_inputs() {
   if [[ "${AUTO}" == 'false' ]]; then
     local visibility
 
-    echo -n "Repository Name: (${REPO_NAME}) "
+    echo -en "${GREEN}==>${NC} Repository Name: (${REPO_NAME}) "
     read REPO_NAME
     if [[ -z "${REPO_NAME}" ]]; then
       REPO_NAME="$(basename $(pwd))"
     fi
 
-    echo -n 'Repository Description: '
+    echo -en "${GREEN}==>${NC} Repository Description: "
     read DESCRIPTION
 
-    echo -n "Repository Visibility [(O)pen/(c)lose]: (Public) "
+    echo -en "${GREEN}==>${NC} Repository Visibility \
+[(O)pen/(c)lose]: (Public) "
     read visibility
     visibility=$(echo "${visibility}" | tr '[:upper:]' '[:lower:]')
     if [[ "${visibility}" == 'c' ]]; then
@@ -75,10 +77,10 @@ user_inputs() {
     fi
   fi
 
-  echo -n 'GitHub Username: '
+  echo -en "${GREEN}==>${NC} GitHub Username: "
   read username
 
-  echo -n "Host password for '${username}': "
+  echo -en "${GREEN}==>${NC} Host password for '${username}': "
   read -s password; echo -e '\n'
   preview
 }
@@ -92,8 +94,9 @@ user_inputs() {
 ########################################
 help_page() {
 cat << EOL
-Info: A shell script to automate GitHub repository process
-Usage: ${CMD_NAME} [OPTIONS...]
+A shell script to automate GitHub repository process
+Usage: 
+  ${CMD_NAME} [OPTIONS...]
 
 OPTIONS:
   -h, --help        Print this help message
@@ -137,7 +140,7 @@ flags() {
       *)
         if [[ -n "$option" ]]; then
           echo -e "${BOLD}${CMD_NAME}${NORM} \
-${RED}${BOLD}Unrecognized option argument:${NORM}${NC} \
+${RED}Unrecognized option argument:${NC} \
 ${BOLD}'${option}'${NORM}
 Try '${CMD_NAME} --help' for more information." >&2
           exit 1
