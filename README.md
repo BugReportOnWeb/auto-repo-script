@@ -36,6 +36,15 @@ Just remove the script from `/usr/local/bin/` directory
 $ sudo rm /usr/local/bin/<cmd-name>
 ```
 
+## Dependency
+- [curl](https://curl.se/) - command line tool and library for transferring data with URLs
+
+```
+-> Ubuntu/Debian:               $ sudo apt install curl
+-> RHEL/CentOS/Fedora:          $ sudo yum install curl
+-> Arch Linux:                  $ sudo pacman -S curl
+```
+
 ## Setup options
 After running the script, you will go through a short questionnaire about the information regarding the remote repository. Those questions are as follow:
 * Name of the Repository
