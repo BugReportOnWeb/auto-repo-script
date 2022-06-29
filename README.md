@@ -56,8 +56,7 @@ After running the script, you will go through a short questionnaire about the in
 Well that goes without saying that this piece of code is not optimised at its best. Without even looking it up, I can surely say numerous bugs might pop up in certain edge cases. Well if you find one, feel free to open an issue about it. Our team (yeah just me) will try to fix it as soon as possible. You can even open a PR if you already have a solution in your mind. Thank you!
 
 ## Known issues (Work in progress)
-- Error handling for none output in GitHub crendentials.
-- Excpection for wrong Github credentials and Visibility option (links to first point).
-- [NOT-A-BUG] Outputing stderr of cURL to `/dev/null`
-- [FEATURE] Config files for GitHub credentials for auto fill
+- [X] Error handling for none or wrong output in GitHub crendentials.
+- [ ] [NOT-A-BUG] Outputing stderr of cURL to `/dev/null`
+- [ ] [FEATURE] Config files for GitHub credentials for auto fill
 
