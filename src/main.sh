@@ -38,7 +38,7 @@ cat <<EOF
 * GitHub URL: https://github.com/${username}
 EOF
 
-  echo; echo -n 'Is this OK [(Y)es/(n)o]? (yes) '
+  echo; echo -en "${GREEN}==>${NC} Is this OK [(Y)es/(n)o]? (yes) "
   read confirm
   confirm=$(echo "${confirm}" | tr '[:upper:]' '[:lower:]')
 
@@ -187,7 +187,7 @@ main() {
   user_inputs; echo
 
   # GitHub API call using cURL
-  curl \
+  curlOutput="$(curl -s \
     -X POST \
     -H "Accept: application/vnd.github.v3+json" \
     -H "Authorization: token ${password}" \
@@ -196,7 +196,12 @@ main() {
       \"description\": \"${DESCRIPTION}\", \
       \"private\": ${PRIVATE} \
     }" \
-    https://api.github.com/user/repos >> /dev/null; echo
+    https://api.github.com/user/repos)"
+
+  if [[ "$(echo ${curlOutput} | jq -r '.message')" == 'Bad credentials' ]]; then
+    echo -e "${RED}Authorization failed:${NC} Please try again!" >&2
+    exit 1
+  fi
 
   setup
 }
