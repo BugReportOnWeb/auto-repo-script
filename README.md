@@ -57,6 +57,6 @@ Well that goes without saying that this piece of code is not optimised at its be
 
 ## Known issues (Work in progress)
 - [X] Error handling for none or wrong output in GitHub crendentials.
-- [ ] [NOT-A-BUG] Outputing stderr of cURL to `/dev/null`
+- [X] [NOT-A-BUG] Outputing stderr of cURL to `/dev/null`
 - [ ] [FEATURE] Config files for GitHub credentials for auto fill
 
